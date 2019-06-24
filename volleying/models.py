@@ -13,7 +13,7 @@ Your app description
 
 class Constants(BaseConstants):
     name_in_url = 'volleying'
-    players_per_group = None
+    players_per_group = 2
     num_rounds = 1
 
 
@@ -26,4 +26,11 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    def role(self):
+        if self.id_in_group == 1:
+            return 'player1'
+        else:
+            return 'player2'
+
+    def get_partner(self):
+        return self.get_others_in_group()[0]
