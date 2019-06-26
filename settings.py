@@ -18,6 +18,12 @@ SESSION_CONFIGS = [
     #    'num_demo_participants': 3,
     #    'app_sequence': ['public_goods', 'payment_info'],
     #},
+    {
+        'name': 'volleying',
+        'display_name': 'ICD',
+        'num_demo_participants': 90,
+        'app_sequence': ['volleying'],
+    },
 ]
 
 
@@ -29,7 +35,12 @@ LANGUAGE_CODE = 'en'
 REAL_WORLD_CURRENCY_CODE = 'USD'
 USE_POINTS = True
 
-ROOMS = []
+ROOMS = [
+    {
+        'name': 'room',
+        'display_name': 'Experimental Room',
+    }
+]
 
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable

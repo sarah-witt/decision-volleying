@@ -4,13 +4,6 @@ from otree.api import (
 )
 
 
-author = 'Your name here'
-
-doc = """
-Your app description
-"""
-
-
 class Constants(BaseConstants):
     name_in_url = 'volleying'
     players_per_group = 2
@@ -26,6 +19,17 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+
+    first_name = models.StringField(
+        label="What is your first name?",
+        initial=""
+    )
+
+    sonaId = models.StringField(
+        label="What is your SONA ID?",
+        initial=""
+    )
+
     def role(self):
         if self.id_in_group == 1:
             return 'player1'
