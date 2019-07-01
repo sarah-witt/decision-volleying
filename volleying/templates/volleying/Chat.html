@@ -1,0 +1,19 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% load static %}
+
+{% block title %}
+Chat
+{% endblock %}
+
+{% block content %}
+
+<p> {{player.first_name}}, take a minute to chat with {{player.get_partner_name}}</p>
+
+{% chat nickname=player.first_name %}
+
+<hr />
+
+{% next_button %}
+
+{% endblock %}
