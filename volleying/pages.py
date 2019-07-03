@@ -42,7 +42,7 @@ class Volley1(Page):
             self.player.set_timeout_data()
 
     def is_displayed(self):
-        return self.group.isVolleying
+        return self.group.isVolleying and self.player.id_in_group() == 1
 
 class Volley2(Page):
     form_model = 'group'
@@ -54,9 +54,9 @@ class Volley2(Page):
     def before_next_page(self):
         if self.timeout_happened:
             self.player.set_timeout_data()
-            
+
     def is_displayed(self):
-        return self.group.isVolleying
+        return self.group.isVolleying and self.id_in_group() == 2
 
 class Volley3(Page):
     form_model = 'group'
@@ -70,7 +70,7 @@ class Volley3(Page):
             self.player.set_timeout_data()
             
     def is_displayed(self):
-        return self.group.isVolleying
+        return self.group.isVolleying and self.id_in_group() == 1
 
 class Volley4(Page):
     form_model = 'group'
@@ -98,21 +98,29 @@ class Volley5(Page):
             self.player.set_timeout_data()
             
     def is_displayed(self):
-        return self.group.isVolleying
+        return self.group.isVolleying and self.id_in_group() == 2
 
 class Results(Page):
-    form_model = 'group'
-    template_name = 'volleying/Volley.html'
+    def is_displayed(self):
+        return not self.group.isVolleying
 
-    def get_form_fields(self): 
-        return self.group.get_remaining_movies()
+
+class Demographics(Page):
+    form_model = 'player'
+    form_fields = ['rate_trailer', 'likely_watch', 'age', 'race', 'gender', 'comment']
+
+    def get_timeout_seconds(self):
+        return self.participant.vars['expiry'] - time.time()
+
+    def is_displayed(self):
+        return self.participant.vars['expiry'] - time.time() > 3
 
     def before_next_page(self):
         if self.timeout_happened:
             self.player.set_timeout_data()
-            
-    def is_displayed(self):
-        return self.group.isVolleying
+
+class Conclusion(Page):
+    pass
 
 
 page_sequence = [
@@ -124,5 +132,7 @@ page_sequence = [
     Volley2,
     Volley3,
     Volley4,
-    Volley5
+    Volley5,
+    Demographics,
+    Conclusion
 ]

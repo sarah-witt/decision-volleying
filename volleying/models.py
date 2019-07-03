@@ -44,13 +44,29 @@ class Group(BaseGroup):
         'carol': self.carol,
         'wild': self.wild}
 
+    def trailers(self):
+        return {'intouchables': 'https://www.youtube.com/watch?v=34WIbmXkewU', 
+        'starfish': 'https://www.youtube.com/watch?v=U5XnW3c8P-Y',
+        'versailles': 'https://www.youtube.com/watch?v=LQW9Ks0GZUQ',
+        'hush': 'https://www.youtube.com/watch?v=Q_P8WCbhC6s',
+        'father': 'https://www.youtube.com/watch?v=_bfqsNh6U7c',
+        'tomboy': 'https://www.youtube.com/watch?v=Jb-Oys-IcWE',
+        'phoenix': 'https://www.youtube.com/watch?v=1-q8C_c-nlM',
+        'shazam': 'https://www.youtube.com/watch?v=Y5I4TA0yhr4',
+        'dumbo':'https://www.youtube.com/watch?v=7NiYVoqBt-8',
+        'survivalist': 'https://www.youtube.com/watch?v=7NiYVoqBt-8',
+        'carol': 'https://www.youtube.com/watch?v=679wr31SXWk',
+        'wild': 'https://www.youtube.com/watch?v=tn2-GSqPyl0'}
+
+    def get_trailer(self, movie):
+        return self.trailers().get(movie)
+
     def get_remaining_movies(self):
         return {k for k,v in self.get_movies().items() if not v} 
 
 
     def volleying(self):
-        #still_available = self.get_movies()
-        return True #any(still_available) and not any(still_available)
+        return self.get_movies().values().count(False) == 1
                  
     
     isVolleying = models.BooleanField(initial= True)
@@ -79,3 +95,68 @@ class Player(BasePlayer):
 
     def get_partner_name(self):
         return self.get_others_in_group()[0].first_name
+
+    rate_trailer = models.IntegerField(
+        label="Please rate how much you liked the trailer",
+        choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        widget=widgets.RadioSelectHorizontal,
+        blank=True
+    )
+
+    likely_watch = models.IntegerField(
+        label="how likely are you to watch the movie?",
+        choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        widget=widgets.RadioSelectHorizontal,
+        blank=True
+    )
+
+        # Demographic questions
+    gender = models.IntegerField(
+        label="What is your gender?",
+        choices=[
+            [1, 'Male'],
+            [2, 'Female'],
+            [3, 'Other']
+        ],
+        widget=widgets.RadioSelect,
+        blank=True
+    )
+    age = models.IntegerField(
+        label="how old are you??",
+        min=18,
+        max=130,
+        blank=True
+    )
+    race = models.IntegerField(
+        label="What is your race?",
+        choices=[
+            [1, 'White'],
+            [2, 'Black, African-American'],
+            [3, 'American Indian or Alaska Native'],
+            [4, 'Asian or Asian-American'],
+            [5, 'Pacific Islander'],
+            [6, 'Some other race']
+        ],
+        widget=widgets.RadioSelect,
+        blank=True
+    )
+    education = models.IntegerField(
+        label="Please indicate the highest level of education completed.",
+        choices=[
+            [1, 'Grammar school'],
+            [2, 'High school or equivalent'],
+            [3, 'Vocational/technical school (2 year)'],
+            [4, 'Some college'],
+            [5, 'College graduate (4 year)'],
+            [6, 'Master\'s degree (MS, etc.)'],
+            [7, 'Doctoral degree (PhD, etc.)'],
+            [8, 'Professional degree (MD, JD, etc.)'],
+            [9, 'Other']
+        ],
+        widget=widgets.RadioSelect,
+        blank=True
+    )
+
+    comment = models.LongStringField(
+        label="Do you have any comments for the researchers? (Optional)", blank=True)
+ 
