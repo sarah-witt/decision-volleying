@@ -64,15 +64,20 @@ class Group(BaseGroup):
     def get_remaining_movies(self):
         return {k for k,v in self.get_movies().items() if not v} 
 
-
     def volleying(self):
         return self.get_movies().values().count(False) == 1
-                 
-    
+
+    def last_movie(self):
+        if self.volleying:
+            return self.get_remaining_movies()[0]
+
+    selectedMovie = models.StringField(initial="")
+                     
     isVolleying = models.BooleanField(initial= True)
 
-
 class Player(BasePlayer):
+
+    isSelecting = models.BooleanField()
 
     first_name = models.StringField(
         label="What is your first name?",

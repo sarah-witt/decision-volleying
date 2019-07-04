@@ -10,6 +10,11 @@ import random
 class Introduction(Page):
     def before_next_page(self):
         # user has 60 minutes to complete as many pages as possible
+        if self.player.id_in_group == 1:
+            self.player.isSelecting = True
+        else:
+            self.player.isSelecting = False
+
         self.participant.vars['expiry'] = time.time() + 3600
 
 class ParticipantInfo(Page):
@@ -29,6 +34,12 @@ class Instructions(Page):
 class Chat(Page):
     def get_timeout_seconds(self):
         return 60
+    
+class WaitForOtherPlayer(WaitPage):
+    template_name = 'volleying/WaitPage.html'
+
+    def is_displayed(self):
+        return self.player.isSelecting
 
 class Volley1(Page):
     form_model = 'group'
@@ -38,11 +49,14 @@ class Volley1(Page):
         return self.group.get_remaining_movies()
 
     def before_next_page(self):
+        self.player.isSelecting = False
+        self.player.get_others_in_group()[0].isSelecting = True
+
         if self.timeout_happened:
             self.player.set_timeout_data()
 
     def is_displayed(self):
-        return self.group.isVolleying and self.player.id_in_group() == 1
+        return self.group.isVolleying and self.player.id_in_group == 1
 
 class Volley2(Page):
     form_model = 'group'
@@ -56,7 +70,7 @@ class Volley2(Page):
             self.player.set_timeout_data()
 
     def is_displayed(self):
-        return self.group.isVolleying and self.id_in_group() == 2
+        return self.group.isVolleying and self.player.id_in_group == 2
 
 class Volley3(Page):
     form_model = 'group'
@@ -70,7 +84,7 @@ class Volley3(Page):
             self.player.set_timeout_data()
             
     def is_displayed(self):
-        return self.group.isVolleying and self.id_in_group() == 1
+        return self.group.isVolleying and self.player.id_in_group == 1
 
 class Volley4(Page):
     form_model = 'group'
@@ -98,9 +112,10 @@ class Volley5(Page):
             self.player.set_timeout_data()
             
     def is_displayed(self):
-        return self.group.isVolleying and self.id_in_group() == 2
+        return self.group.isVolleying and self.player.id_in_group == 2
 
 class Results(Page):
+
     def is_displayed(self):
         return not self.group.isVolleying
 
