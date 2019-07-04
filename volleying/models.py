@@ -65,7 +65,7 @@ class Group(BaseGroup):
         return {k for k,v in self.get_movies().items() if not v} 
 
     def volleying(self):
-        return self.get_movies().values().count(False) == 1
+        return not list(self.get_movies().values()).count(False) == 1
 
     def last_movie(self):
         if self.volleying:

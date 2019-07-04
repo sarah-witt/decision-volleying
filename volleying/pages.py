@@ -38,10 +38,7 @@ class Chat(Page):
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
 
-    def is_displayed(self):
-        return self.player.isSelecting
-
-class Volley1(Page):
+class VolleyPlayer1(Page):
     form_model = 'group'
     template_name = 'volleying/Volley.html'
 
@@ -56,9 +53,9 @@ class Volley1(Page):
             self.player.set_timeout_data()
 
     def is_displayed(self):
-        return self.group.isVolleying and self.player.id_in_group == 1
+        return self.group.volleying() and (self.player.id_in_group == 1)
 
-class Volley2(Page):
+class VolleyPlayer2(Page):
     form_model = 'group'
     template_name = 'volleying/Volley.html'
 
@@ -66,70 +63,21 @@ class Volley2(Page):
         return self.group.get_remaining_movies()
 
     def before_next_page(self):
-        if self.timeout_happened:
-            self.player.set_timeout_data()
+        self.player.isSelecting = False
+        self.player.get_others_in_group()[0].isSelecting = True
 
     def is_displayed(self):
-        return self.group.isVolleying and self.player.id_in_group == 2
+        return self.group.volleying() and (self.player.id_in_group == 2)
 
-class Volley3(Page):
-    form_model = 'group'
-    template_name = 'volleying/Volley.html'
-
-    def get_form_fields(self): 
-        return self.group.get_remaining_movies()
-
-    def before_next_page(self):
-        if self.timeout_happened:
-            self.player.set_timeout_data()
-            
-    def is_displayed(self):
-        return self.group.isVolleying and self.player.id_in_group == 1
-
-class Volley4(Page):
-    form_model = 'group'
-    template_name = 'volleying/Volley.html'
-
-    def get_form_fields(self): 
-        return self.group.get_remaining_movies()
-
-    def before_next_page(self):
-        if self.timeout_happened:
-            self.player.set_timeout_data()
-            
-    def is_displayed(self):
-        return self.group.isVolleying
-
-class Volley5(Page):
-    form_model = 'group'
-    template_name = 'volleying/Volley.html'
-
-    def get_form_fields(self): 
-        return self.group.get_remaining_movies()
-
-    def before_next_page(self):
-        if self.timeout_happened:
-            self.player.set_timeout_data()
-            
-    def is_displayed(self):
-        return self.group.isVolleying and self.player.id_in_group == 2
 
 class Results(Page):
-
-    def is_displayed(self):
-        return not self.group.isVolleying
+    form_model = 'group'
 
 
 class Demographics(Page):
     form_model = 'player'
     form_fields = ['rate_trailer', 'likely_watch', 'age', 'race', 'gender', 'comment']
-
-    def get_timeout_seconds(self):
-        return self.participant.vars['expiry'] - time.time()
-
-    def is_displayed(self):
-        return self.participant.vars['expiry'] - time.time() > 3
-
+    
     def before_next_page(self):
         if self.timeout_happened:
             self.player.set_timeout_data()
@@ -143,11 +91,21 @@ page_sequence = [
     ParticipantInfo,
     Instructions,
     Chat,
-    Volley1,
-    Volley2,
-    Volley3,
-    Volley4,
-    Volley5,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer2,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer2,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer2,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    Results,
     Demographics,
     Conclusion
 ]
