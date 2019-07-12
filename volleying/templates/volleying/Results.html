@@ -2,11 +2,38 @@
 {% load otree static %}
 
 {% block title %}
-Trailer
+Trailer for {{player.group.last_movie_name}}
 {% endblock %}
-{{group.last_movie}}
+
 {% block content %}
 
+{% if player.group.last_movie == "intouchables" %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/34WIbmXkewU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'starfish' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/U5XnW3c8P-Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'versailles' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/LQW9Ks0GZUQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'hush' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Q_P8WCbhC6s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'father' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/_bfqsNh6U7c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == "tomboy" %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Jb-Oys-IcWE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'phoenix' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/1-q8C_c-nlM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'shazam' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Y5I4TA0yhr4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'dumbo' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7NiYVoqBt-8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'survivalist' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7NiYVoqBt-8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'carol' %}
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/679wr31SXWk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% elif player.group.last_movie == 'wild' %} 
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/tn2-GSqPyl0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% endif %}
+<br>
+<br>
     {% next_button %}
 {% endblock %}
 

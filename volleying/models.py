@@ -17,6 +17,8 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
 
+    eliminateNegative = models.BooleanField(initial=True) 
+
     intouchables = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="The Intouchables (Foreign) – two very different men bond and develop a very close relationship")
     starfish =  models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Starfish (Science Fiction) – a young woman struggles with the death of her best friend")
     versailles = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="The Queen of Versailles (Documentary) – the economic crisis threatens the fortune of a billionaire family")
@@ -44,37 +46,39 @@ class Group(BaseGroup):
         'carol': self.carol,
         'wild': self.wild}
 
-    def trailers(self):
-        return {'intouchables': 'https://www.youtube.com/watch?v=34WIbmXkewU', 
-        'starfish': 'https://www.youtube.com/watch?v=U5XnW3c8P-Y',
-        'versailles': 'https://www.youtube.com/watch?v=LQW9Ks0GZUQ',
-        'hush': 'https://www.youtube.com/watch?v=Q_P8WCbhC6s',
-        'father': 'https://www.youtube.com/watch?v=_bfqsNh6U7c',
-        'tomboy': 'https://www.youtube.com/watch?v=Jb-Oys-IcWE',
-        'phoenix': 'https://www.youtube.com/watch?v=1-q8C_c-nlM',
-        'shazam': 'https://www.youtube.com/watch?v=Y5I4TA0yhr4',
-        'dumbo':'https://www.youtube.com/watch?v=7NiYVoqBt-8',
-        'survivalist': 'https://www.youtube.com/watch?v=7NiYVoqBt-8',
-        'carol': 'https://www.youtube.com/watch?v=679wr31SXWk',
-        'wild': 'https://www.youtube.com/watch?v=tn2-GSqPyl0'}
-
-    def get_trailer(self, movie):
-        return self.trailers().get(movie)
+    def movie_titles(self):
+        return {'intouchables': 'The Intouchables', 
+        'starfish': 'Starfish',
+        'versailles': 'The Queen of Versailles',
+        'hush': 'Hush',
+        'father': 'Like Father',
+        'tomboy': 'Tomboy',
+        'phoenix': 'Dark Phoenix',
+        'shazam': 'Shazam!',
+        'dumbo': 'Dumbo',
+        'survivalist': 'The Survivalist',
+        'carol': 'Carol',
+        'wild': 'Wild'}
 
     def get_remaining_movies(self):
-        return {k for k,v in self.get_movies().items() if not v} 
+        if self.eliminateNegative:
+            return {k for k,v in self.get_movies().items() if not v} 
 
     def volleying(self):
-        return not list(self.get_movies().values()).count(False) == 1
+        if self.eliminateNegative:   
+            return not list(self.get_movies().values()).count(False) == 1
 
     def last_movie(self):
-        if self.volleying:
-            return self.get_remaining_movies()[0]
+        return list(self.get_remaining_movies())[0]
 
-    selectedMovie = models.StringField(initial="")
+    def last_movie_name(self):
+        return self.movie_titles().get(self.last_movie())
+
+
+    numberVolleys = models.IntegerField(initial=0)
+
+    volley = models.LongStringField(initial="")
                      
-    isVolleying = models.BooleanField(initial= True)
-
 class Player(BasePlayer):
 
     isSelecting = models.BooleanField()
@@ -84,10 +88,12 @@ class Player(BasePlayer):
         initial=""
     )
 
-    sonaId = models.StringField(
-        label="What is your SONA ID?",
+    mturkId = models.StringField(
+        label="What is your mturk ID?",
         initial=""
     )
+
+    mturkCode = models.StringField()
 
     def role(self):
         if self.id_in_group == 1:
@@ -100,6 +106,11 @@ class Player(BasePlayer):
 
     def get_partner_name(self):
         return self.get_others_in_group()[0].first_name
+
+    
+    selectedMovie = models.StringField(initial="")
+
+    
 
     rate_trailer = models.IntegerField(
         label="Please rate how much you liked the trailer",

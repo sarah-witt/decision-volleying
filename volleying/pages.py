@@ -20,13 +20,13 @@ class Introduction(Page):
 class ParticipantInfo(Page):
     template_name = 'volleying/ParticipantInfo.html'
     form_model = 'player'
-    form_fields = ['first_name', 'sonaId']
+    form_fields = ['first_name', 'mturkId']
 
     def error_message(self, values):
         if values["first_name"] == '':
             return 'Please enter your name'
-        if values["sonaId"] == '':
-            return 'Please enter a valid sonaId'
+        if values["mturkId"] == '':
+            return 'Please enter a valid mturkId'
 
 class Instructions(Page):
     pass
@@ -48,9 +48,8 @@ class VolleyPlayer1(Page):
     def before_next_page(self):
         self.player.isSelecting = False
         self.player.get_others_in_group()[0].isSelecting = True
-
-        if self.timeout_happened:
-            self.player.set_timeout_data()
+        self.group.numberVolleys +=1
+        self.group.volley = self.group.volley + " [" +  " ".join(self.group.get_remaining_movies()) + "]"
 
     def is_displayed(self):
         return self.group.volleying() and (self.player.id_in_group == 1)
@@ -65,14 +64,16 @@ class VolleyPlayer2(Page):
     def before_next_page(self):
         self.player.isSelecting = False
         self.player.get_others_in_group()[0].isSelecting = True
+        self.group.numberVolleys +=1
+        self.group.volley = self.group.volley + " [" +  " ".join(self.group.get_remaining_movies()) + "]"
 
     def is_displayed(self):
         return self.group.volleying() and (self.player.id_in_group == 2)
 
 
 class Results(Page):
-    form_model = 'group'
-
+    def before_next_page(self):
+        self.player.selectedMovie = self.player.group.last_movie()
 
 class Demographics(Page):
     form_model = 'player'
@@ -100,6 +101,14 @@ page_sequence = [
     VolleyPlayer2,
     WaitForOtherPlayer,
     VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer2,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
+    WaitForOtherPlayer,
+    VolleyPlayer2,
     WaitForOtherPlayer,
     VolleyPlayer2,
     WaitForOtherPlayer,
