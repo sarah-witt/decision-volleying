@@ -63,6 +63,13 @@ class Group(BaseGroup):
     def get_remaining_movies(self):
         if self.eliminateNegative:
             return {k for k,v in self.get_movies().items() if not v} 
+        else: 
+            movies = {k for k,v in self.get_movies().items() if not v}
+            vals = {v for k,v in self.get_movies().items() if not v}
+            vals.map(lambda x: not x)
+            return movies
+            #get all remaining movies and then mark them as false
+
 
     def volleying(self):
         if self.eliminateNegative:   

@@ -1,4 +1,4 @@
-{% extends "global/Page.html" %}
+{% extends "volleying/Page.html" %}
 {% load otree static %}
 
 {% block title %}
@@ -7,33 +7,44 @@ Trailer for {{player.group.last_movie_name}}
 
 {% block content %}
 
+<p> You and your partner chose to watch the trailer for {{player.group.last_movie_name}} together. Now, take time to watch the trailer and chat with your partner in the chatbox below. </p>
+
+<div class="trailers"> 
+    <div class="trailerColumn">
 {% if player.group.last_movie == "intouchables" %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/34WIbmXkewU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/34WIbmXkewU?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'starfish' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/U5XnW3c8P-Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/U5XnW3c8P-Y?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'versailles' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/LQW9Ks0GZUQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/LQW9Ks0GZUQ?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'hush' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/Q_P8WCbhC6s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Q_P8WCbhC6s?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'father' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/_bfqsNh6U7c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/_bfqsNh6U7c?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == "tomboy" %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/Jb-Oys-IcWE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Jb-Oys-IcWE?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'phoenix' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/1-q8C_c-nlM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/1-q8C_c-nlM?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'shazam' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/Y5I4TA0yhr4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Y5I4TA0yhr4?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'dumbo' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/7NiYVoqBt-8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7NiYVoqBt-8?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'survivalist' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/7NiYVoqBt-8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/KNADbtHsIU8?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'carol' %}
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/679wr31SXWk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/679wr31SXWk?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% elif player.group.last_movie == 'wild' %} 
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/tn2-GSqPyl0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/tn2-GSqPyl0?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {% endif %}
+</div>
+<div class="trailerColumn">
+    <p> <strong> Chat with your partner here</strong></p>
+    {% chat nickname=player.first_name %}
+</div>
 <br>
 <br>
+
+</div>
     {% next_button %}
 {% endblock %}
 
