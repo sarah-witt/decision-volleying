@@ -49,10 +49,16 @@ class VolleyPlayer1(Page):
         self.player.isSelecting = False
         self.player.get_others_in_group()[0].isSelecting = True
         self.group.numberVolleys +=1
-        self.group.volley = self.group.volley + " [" +  " ".join(self.group.get_remaining_movies()) + "]"
+        self.group.volley = self.group.volley + " ".join(self.group.get_remaining_movies())
+        if self.timeout_happened:
+            self.player.get_partner().timed_out = True
+            self.player.timed_out = True
+
+    def get_timeout_seconds(self):
+        return 60
 
     def is_displayed(self):
-        return self.group.volleying() and (self.player.id_in_group == 1)
+        return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 1)
 
 class VolleyPlayer2(Page):
     form_model = 'group'
@@ -66,22 +72,40 @@ class VolleyPlayer2(Page):
         self.player.get_others_in_group()[0].isSelecting = True
         self.group.numberVolleys +=1
         self.group.volley = self.group.volley + " [" +  " ".join(self.group.get_remaining_movies()) + "]"
+        if self.timeout_happened:
+            self.player.get_partner().timed_out = True
+            self.player.timed_out = True
+
+    def get_timeout_seconds(self):
+        return 60
 
     def is_displayed(self):
-        return self.group.volleying() and (self.player.id_in_group == 2)
+        return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
 
 class Results(Page):
+
+    def is_displayed(self):
+        return not self.player.timed_out
+
     def before_next_page(self):
         self.player.selectedMovie = self.player.group.last_movie()
+        if self.timeout_happened:
+            self.player.timed_out = True
+
+    def get_timeout_seconds(self):
+        return 200
 
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['rate_trailer', 'likely_watch', 'age', 'race', 'gender', 'comment']
+    form_fields = ['satisfied', 'partner_experience', 'age', 'race', 'gender', 'comment']
     
+    def is_displayed(self):
+        return not self.player.timed_out
+
     def before_next_page(self):
         if self.timeout_happened:
-            self.player.set_timeout_data()
+            self.player.timed_out = True
 
 class Conclusion(Page):
     pass

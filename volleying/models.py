@@ -1,4 +1,5 @@
 from django.forms import CheckboxInput, MultipleChoiceField, widgets as w
+from random import randint
 from otree.api import (
     models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
     Currency as c, currency_range
@@ -60,6 +61,21 @@ class Group(BaseGroup):
         'carol': 'Carol',
         'wild': 'Wild'}
 
+    def movie_descriptions(self):
+        return {'intouchables': "The Intouchables (Foreign) – two very different men bond and develop a very close relationship",
+                'starfish': "Starfish (Science Fiction) – a young woman struggles with the death of her best friend",
+                'versailles': "The Queen of Versailles (Documentary) – the economic crisis threatens the fortune of a billionaire family",
+                'hush': "Hush (Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window",
+                'father': "Like Father (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon",
+                'tomboy': "Tomboy (Drama) - a 10-year old girl experiments with with her gender identity over the summer",
+                'phoenix': "Dark Phoenix (Science Fiction/Action) – the X-Men embark on a risky mission in space",
+                'shazam': "Shazam! (Superhero) - a 14-year-old transforms into an adult superhero with one magic word",
+                'dumbo': "Dumbo (Fantasy) - a man and his two children take care of a newborn elephant that can fly",
+                'survivalist': "The Survivalist (Thriller) - a survivalist hides in the forest protecting his crop from intruders",
+                'carol': "Carol (Romance) - two women develop a fast bond that becomes a love with complicated consequences",
+                'wild': "Wild (Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy"}
+
+
     def get_remaining_movies(self):
         if self.eliminateNegative:
             return {k for k,v in self.get_movies().items() if not v} 
@@ -70,6 +86,9 @@ class Group(BaseGroup):
             return movies
             #get all remaining movies and then mark them as false
 
+    def get_eliminated_movie_descriptions(self):
+        if self.eliminateNegative:
+            return map(lambda x: self.movie_descriptions().get(x), list({k for k,v in self.get_movies().items() if v}))
 
     def volleying(self):
         if self.eliminateNegative:   
@@ -102,6 +121,10 @@ class Player(BasePlayer):
 
     mturkCode = models.StringField()
 
+    mturkCompletitionCode = models.StringField(initial="")
+
+    timed_out = models.BooleanField(initial=False)
+
     def role(self):
         if self.id_in_group == 1:
             return 'player1'
@@ -114,10 +137,30 @@ class Player(BasePlayer):
     def get_partner_name(self):
         return self.get_others_in_group()[0].first_name
 
-    
+    def get_code(self):
+        code = ""
+        if not self.timed_out:
+            code = "movies" + str(randint(1000, 9999))
+        else:
+            code =  "timeout" + str(randint(1000, 9999))
+        self.mturkCompletitionCode = code
+        return code
+
+
     selectedMovie = models.StringField(initial="")
 
     
+    satisfied = models.IntegerField(
+        label="How satisfied are you with the choice you came to with your partner?",
+        choices=[1, 2, 3, 4, 5],
+        widget=widgets.RadioSelectHorizontal,
+        blank=True
+    )
+
+    partner_experience = models.LongStringField(
+        label="Explain how your experience with your partner was:",
+        blank=True,
+    )
 
     rate_trailer = models.IntegerField(
         label="Please rate how much you liked the trailer",
