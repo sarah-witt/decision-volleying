@@ -28,12 +28,15 @@ class ParticipantInfo(Page):
         if values["mturkId"] == '':
             return 'Please enter a valid mturkId'
 
-class Instructions(Page):
+class WelcomeInstructions(Page):
     pass
 
 class Chat(Page):
     def get_timeout_seconds(self):
         return 60
+
+class Instructions(Page):
+    pass
     
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
@@ -114,8 +117,9 @@ class Conclusion(Page):
 page_sequence = [
     Introduction,
     ParticipantInfo,
-    Instructions,
+    WelcomeInstructions,
     Chat,
+    Instructions,
     VolleyPlayer1,
     WaitForOtherPlayer,
     VolleyPlayer2,

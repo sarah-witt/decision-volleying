@@ -13,7 +13,9 @@ class Constants(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    pass
+    def creating_session(self):
+        for group_id, group in enumerate(self.get_groups()):
+            group.eliminateNegative = group_id % 2 == 0
 
 
 class Group(BaseGroup):
