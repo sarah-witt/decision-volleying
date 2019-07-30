@@ -1,12 +1,8 @@
-from otree.api import Currency as c, currency_range
 from ._builtin import Page, WaitPage
 from .models import Constants, MovieSelection
 from .forms import MovieForm
-import re
-import time
-import random
 from django.forms import modelformset_factory
-from django.forms import CheckboxInput
+import time
 
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('movie_isChecked',), extra=0)
 

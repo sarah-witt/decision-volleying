@@ -1,8 +1,7 @@
-from django.forms import CheckboxInput, MultipleChoiceField, widgets as w
+from django.forms import CheckboxInput
 from random import randint
 from otree.api import (
-    models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
-    Currency as c, currency_range
+    models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer
 )
 from otree.db.models import Model, ForeignKey
 
@@ -25,8 +24,6 @@ class Group(BaseGroup):
             movieObj = self.movieselection_set.create(group=self, movie_key=name, movie_name=movie["title"], movie_description=movie["description"], movie_isRemaining=True, movie_isChecked=False)
             movieObj.save()
 
-    eliminateNegative = models.BooleanField(initial=True) 
-
     def movies(self):
         return {'intouchables': {"description": "The Intouchables (Foreign) – two very different men bond and develop a very close relationship", "title":  "The Intouchables"},
                 'starfish': {"description": "Starfish (Science Fiction) – a young woman struggles with the death of her best friend", "title": "Starfish"}, 
@@ -40,6 +37,8 @@ class Group(BaseGroup):
                 'survivalist': {"description": "The Survivalist (Thriller) - a survivalist hides in the forest protecting his crop from intruders", "title": "The Survivalist"},
                 'carol': {"description": "Carol (Romance) - two women develop a fast bond that becomes a love with complicated consequences", "title": "Carol"},
                 'wild': {"description": "Wild (Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy", "title": "Wild"}}
+    
+    eliminateNegative = models.BooleanField(initial=True) 
 
     def get_movies(self):
         return MovieSelection.objects.filter(group__exact=self)
@@ -82,24 +81,6 @@ class MovieSelection(Model):
 
 class Player(BasePlayer):
 
-    isSelecting = models.BooleanField()
-
-    first_name = models.StringField(
-        label="What is your first name?",
-        initial=""
-    )
-
-    mturkId = models.StringField(
-        label="What is your mturk ID?",
-        initial=""
-    )
-
-    mturkCode = models.StringField()
-
-    mturkCompletitionCode = models.StringField(initial="")
-
-    timed_out = models.BooleanField(initial=False)
-
     def role(self):
         if self.id_in_group == 1:
             return 'player1'
@@ -121,10 +102,26 @@ class Player(BasePlayer):
         self.mturkCompletitionCode = code
         return code
 
-
     selectedMovie = models.StringField(initial="")
 
-    
+    isSelecting = models.BooleanField()
+
+    first_name = models.StringField(
+        label="What is your first name?",
+        initial=""
+    )
+
+    mturkId = models.StringField(
+        label="What is your mturk ID?",
+        initial=""
+    )
+
+    mturkCode = models.StringField()
+
+    mturkCompletitionCode = models.StringField(initial="")
+
+    timed_out = models.BooleanField(initial=False)
+
     satisfied = models.IntegerField(
         label="How satisfied are you with the choice you came to with your partner?",
         choices=[[1, "Very Unsatisfied"], [2, "Unsatisfied"], [3, "Neutral"], [4, "Satisfied"], [5, "Very Satisfied"]],
