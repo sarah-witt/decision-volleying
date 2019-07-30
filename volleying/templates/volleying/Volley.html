@@ -16,6 +16,8 @@
     {% for field in form %}
         {% if field.field.widget|is_checkbox %}
             {{ field }} {{ field.label_tag }}
+        {% else %}
+            {{field}}
         {% endif %}
     {% endfor %}
 <br>

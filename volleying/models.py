@@ -65,6 +65,9 @@ class Group(BaseGroup):
     def last_movie_name(self):
         return self.get_remaining_movies()[0].movie_name
 
+    def last_movie_key(self):
+        return self.get_remaining_movies()[0].movie_key
+
     numberVolleys = models.IntegerField(initial=0)
 
     volley = models.LongStringField(initial="")
