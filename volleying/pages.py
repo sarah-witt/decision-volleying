@@ -8,8 +8,7 @@ import random
 from django.forms import modelformset_factory
 from django.forms import CheckboxInput
 
-MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('movie_isChecked',),
-widgets={'movie_isChecked': CheckboxInput}, extra=0)
+MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('movie_isChecked',), extra=0)
 
 def before_next_page_volley(page):
     page.group.numberVolleys +=1
@@ -46,6 +45,11 @@ def before_next_page_volley(page):
                 mov.movie_isChecked = True
 
         mov.save()
+
+    if page.timeout_happened:
+        page.player.get_partner().timed_out = True
+        page.player.timed_out = True
+    
 
 class Introduction(Page):
     def before_next_page(self):
@@ -93,9 +97,7 @@ class VolleyPlayer1(Page):
             form.setLabel(model.movie_description)
 
         return {
-            'movie_formset': question_formset,
-            'movie_values_and_forms': zip([mov.movie_isChecked for mov in remaining_movies], question_formset.forms),
-
+            'movie_formset': question_formset
         }
     
     def before_next_page(self):
@@ -119,9 +121,7 @@ class VolleyPlayer2(Page):
             form.setLabel(model.movie_description)
 
         return {
-            'movie_formset': question_formset,
-            'movie_values_and_forms': zip([mov.movie_isChecked for mov in remaining_movies], question_formset.forms),
-
+            'movie_formset': question_formset
         }
     
     def before_next_page(self):

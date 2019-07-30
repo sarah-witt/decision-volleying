@@ -1,8 +1,8 @@
 from .models import MovieSelection, Group, Player, Constants
-from django.forms import inlineformset_factory, BaseFormSet, BaseInlineFormSet, CheckboxInput
-from django import forms
+from django.forms import inlineformset_factory, BaseFormSet, BaseInlineFormSet, CheckboxInput, ModelForm
 from django.db import models
-from django.forms import ModelForm
+
+
 
 class MovieForm(ModelForm):
     class Meta:

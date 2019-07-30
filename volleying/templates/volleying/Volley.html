@@ -1,16 +1,26 @@
 {% extends "global/Page.html" %}
+{% load checkboxfilter %}
 {% load otree static %}
 {% load static %}
 
 {% block content %}
 
+{% if player.group.eliminateNegative %}
 <p> Please select the movie trailer(s) you would <strong> not </strong> like to watch.</p>
-
+{% else %}
+<p> Please select the movie trailer(s) you <strong> would </strong> like to watch.</p>
+{% endif %}
 <h5> Remaining Movies </h5>
+<div> 
 {% for form in movie_formset %}
-        {{ form }}
+    {% for field in form %}
+        {% if field.field.widget|is_checkbox %}
+            {{ field }} {{ field.label_tag }}
+        {% endif %}
+    {% endfor %}
+<br>
 {% endfor %}
-     
+</div>
 <br>
 <hr>
 <br>
