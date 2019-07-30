@@ -11,6 +11,42 @@ from django.forms import CheckboxInput
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('movie_isChecked',),
 widgets={'movie_isChecked': CheckboxInput}, extra=0)
 
+def before_next_page_volley(page):
+    page.group.numberVolleys +=1
+    page.player.isSelecting = False
+    page.player.get_others_in_group()[0].isSelecting = True
+    page.group.volley = page.group.volley + " ".join(page.group.get_remaining_movie_names())
+
+    all_movies = MovieSelection.objects.filter(group__exact=page.player.group)
+    remaining_movies = all_movies.filter(movie_isRemaining__exact=True)
+
+    submitted_data = page.form.data
+    movies_by_id = {mov.pk: mov for mov in page.player.group.movieselection_set.all()}
+
+
+    for i in range(len(remaining_movies)):
+        input_prefix = 'form-%d-' % i
+        mov_id = int(submitted_data[input_prefix + 'id'])
+        isChecked = submitted_data.get(input_prefix + 'movie_isChecked')
+
+        mov = movies_by_id[mov_id]
+
+        if isChecked:
+            mov.movie_isChecked = True
+
+        if not page.group.eliminateNegative:
+            if not mov.movie_isChecked:
+                mov.movie_isRemaining = False
+            else: 
+                mov.movie_isRemaining = True
+                mov.movie_isChecked = False
+        else:
+            if mov.movie_isChecked:
+                mov.movie_isRemaining = False
+                mov.movie_isChecked = True
+
+        mov.save()
+
 class Introduction(Page):
     def before_next_page(self):
         # user has 60 minutes to complete as many pages as possible
@@ -63,38 +99,7 @@ class VolleyPlayer1(Page):
         }
     
     def before_next_page(self):
-        all_movies = MovieSelection.objects.filter(group__exact=self.player.group)
-        remaining_movies = all_movies.filter(movie_isRemaining__exact=True)
-
-        submitted_data = self.form.data
-        print(submitted_data)
-
-        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all()}
-
-
-        for i in range(len(remaining_movies)):
-            input_prefix = 'form-%d-' % i
-            mov_id = int(submitted_data[input_prefix + 'id'])
-            isChecked = submitted_data.get(input_prefix + 'movie_isChecked')
-
-            mov = movies_by_id[mov_id]
-
-            print(isChecked)
-            if isChecked:
-                mov.movie_isChecked = True
-
-            if not self.group.eliminateNegative:
-                if not mov.movie_isChecked:
-                    mov.movie_isRemaining = False
-                else: 
-                    mov.movie_isRemaining = True
-                    mov.movie_isChecked = False
-            else:
-                if mov.movie_isChecked:
-                    mov.movie_isRemaining = False
-                    mov.movie_isChecked = True
-
-            mov.save()
+        before_next_page_volley(self)
 
     def get_timeout_seconds(self):
         return 60
@@ -120,37 +125,7 @@ class VolleyPlayer2(Page):
         }
     
     def before_next_page(self):
-        all_movies = MovieSelection.objects.filter(group__exact=self.player.group)
-        remaining_movies = all_movies.filter(movie_isRemaining__exact=True)
-
-        submitted_data = self.form.data
-        print(submitted_data)
-
-        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all()}
-
-
-        for i in range(len(remaining_movies)):
-            input_prefix = 'form-%d-' % i
-            mov_id = int(submitted_data[input_prefix + 'id'])
-            isChecked = submitted_data.get(input_prefix + 'movie_isChecked')
-
-            mov = movies_by_id[mov_id]
-
-            if isChecked:
-                mov.movie_isChecked = True
-
-            if not self.group.eliminateNegative:
-                if not mov.movie_isChecked:
-                    mov.movie_isRemaining = False
-                mov.movie_isChecked = False
-            else:
-                if not mov.movie_isChecked:
-                    mov.movie_isRemaining = True
-                else: 
-                    mov.movie_isRemaining = False
-                    mov.movie_isChecked = True
-
-            mov.save()
+        before_next_page_volley(self)
             
     def get_timeout_seconds(self):
         return 60

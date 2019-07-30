@@ -53,6 +53,9 @@ class Group(BaseGroup):
     def get_eliminated_movie_descriptions(self):
         return map(lambda mov: mov.movie_description, self.get_eliminated_movies())
 
+    def get_remaining_movie_names(self):
+        return map(lambda mov: mov.movie_name, self.get_remaining_movies())
+
     def volleying(self):
         return not len(self.get_remaining_movies()) == 1
 
