@@ -4,7 +4,7 @@ from otree.api import (
     models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
     Currency as c, currency_range
 )
-
+from otree.db.models import Model, ForeignKey
 
 class Constants(BaseConstants):
     name_in_url = 'volleying'
@@ -16,97 +16,64 @@ class Subsession(BaseSubsession):
     def creating_session(self):
         for group_id, group in enumerate(self.get_groups()):
             group.eliminateNegative = group_id % 2 == 0
-
+            group.generate_movie_options()
 
 class Group(BaseGroup):
 
+    def generate_movie_options(self):
+        for name, movie in self.movies().items():
+            movieObj = self.movieselection_set.create(group=self, movie_key=name, movie_name=movie["title"], movie_description=movie["description"], movie_isRemaining=True, movie_isChecked=False)
+            movieObj.save()
+
     eliminateNegative = models.BooleanField(initial=True) 
 
-    intouchables = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="The Intouchables (Foreign) – two very different men bond and develop a very close relationship")
-    starfish =  models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Starfish (Science Fiction) – a young woman struggles with the death of her best friend")
-    versailles = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="The Queen of Versailles (Documentary) – the economic crisis threatens the fortune of a billionaire family")
-    hush = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Hush (Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window")
-    father = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Like Father (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon")
-    tomboy = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Tomboy (Drama) - a 10-year old girl experiments with with her gender identity over the summer")
-    phoenix = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Dark Phoenix (Science Fiction/Action) – the X-Men embark on a risky mission in space")
-    shazam = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Shazam! (Superhero) - a 14-year-old transforms into an adult superhero with one magic word")
-    dumbo = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Dumbo (Fantasy) - a man and his two children take care of a newborn elephant that can fly")
-    survivalist = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="The Survivalist (Thriller) - a survivalist hides in the forest protecting his crop from intruders")
-    carol = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Carol (Romance) - two women develop a fast bond that becomes a love with complicated consequences")
-    wild = models.BooleanField(blank=True, widget=CheckboxInput, initial=False, label="Wild (Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy")
+    def movies(self):
+        return {'intouchables': {"description": "The Intouchables (Foreign) – two very different men bond and develop a very close relationship", "title":  "The Intouchables"},
+                'starfish': {"description": "Starfish (Science Fiction) – a young woman struggles with the death of her best friend", "title": "Starfish"}, 
+                'versailles': {"description": "The Queen of Versailles (Documentary) – the economic crisis threatens the fortune of a billionaire family", "title": "The Queen of Versailles"},
+                'hush': {"description": "Hush (Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window", "title": "Hush"},
+                'father': {"description": "Like Father (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon", "title": "Like Father"},
+                'tomboy': {"description": "Tomboy (Drama) - a 10-year old girl experiments with with her gender identity over the summer", "title": "Tomboy"},
+                'phoenix': {"description": "Dark Phoenix (Science Fiction/Action) – the X-Men embark on a risky mission in space", "title": "Dark Phoenix"},
+                'shazam': {"description": "Shazam! (Superhero) - a 14-year-old transforms into an adult superhero with one magic word", "title": "Shazam!"},
+                'dumbo': {"description": "Dumbo (Fantasy) - a man and his two children take care of a newborn elephant that can fly", "title": "Dumbo"},
+                'survivalist': {"description": "The Survivalist (Thriller) - a survivalist hides in the forest protecting his crop from intruders", "title": "The Survivalist"},
+                'carol': {"description": "Carol (Romance) - two women develop a fast bond that becomes a love with complicated consequences", "title": "Carol"},
+                'wild': {"description": "Wild (Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy", "title": "Wild"}}
 
     def get_movies(self):
-        return {'intouchables': self.intouchables, 
-        'starfish': self.starfish,
-        'versailles': self.versailles,
-        'hush': self.hush,
-        'father': self.father,
-        'tomboy': self.tomboy,
-        'phoenix': self.phoenix,
-        'shazam': self.shazam,
-        'dumbo': self.dumbo,
-        'survivalist': self.survivalist,
-        'carol': self.carol,
-        'wild': self.wild}
-
-    def movie_titles(self):
-        return {'intouchables': 'The Intouchables', 
-        'starfish': 'Starfish',
-        'versailles': 'The Queen of Versailles',
-        'hush': 'Hush',
-        'father': 'Like Father',
-        'tomboy': 'Tomboy',
-        'phoenix': 'Dark Phoenix',
-        'shazam': 'Shazam!',
-        'dumbo': 'Dumbo',
-        'survivalist': 'The Survivalist',
-        'carol': 'Carol',
-        'wild': 'Wild'}
-
-    def movie_descriptions(self):
-        return {'intouchables': "The Intouchables (Foreign) – two very different men bond and develop a very close relationship",
-                'starfish': "Starfish (Science Fiction) – a young woman struggles with the death of her best friend",
-                'versailles': "The Queen of Versailles (Documentary) – the economic crisis threatens the fortune of a billionaire family",
-                'hush': "Hush (Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window",
-                'father': "Like Father (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon",
-                'tomboy': "Tomboy (Drama) - a 10-year old girl experiments with with her gender identity over the summer",
-                'phoenix': "Dark Phoenix (Science Fiction/Action) – the X-Men embark on a risky mission in space",
-                'shazam': "Shazam! (Superhero) - a 14-year-old transforms into an adult superhero with one magic word",
-                'dumbo': "Dumbo (Fantasy) - a man and his two children take care of a newborn elephant that can fly",
-                'survivalist': "The Survivalist (Thriller) - a survivalist hides in the forest protecting his crop from intruders",
-                'carol': "Carol (Romance) - two women develop a fast bond that becomes a love with complicated consequences",
-                'wild': "Wild (Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy"}
-
+        return MovieSelection.objects.filter(group__exact=self)
 
     def get_remaining_movies(self):
-        if self.eliminateNegative:
-            return {k for k,v in self.get_movies().items() if not v} 
-        else: 
-            movies = {k for k,v in self.get_movies().items() if not v}
-            vals = {v for k,v in self.get_movies().items() if not v}
-            vals.map(lambda x: not x)
-            return movies
-            #get all remaining movies and then mark them as false
+        return self.get_movies().filter(movie_isRemaining=True)
+
+    def get_eliminated_movies(self):
+        return self.get_movies().filter(movie_isRemaining=False)
 
     def get_eliminated_movie_descriptions(self):
-        if self.eliminateNegative:
-            return map(lambda x: self.movie_descriptions().get(x), list({k for k,v in self.get_movies().items() if v}))
+        return map(lambda mov: mov.movie_description, self.get_eliminated_movies())
 
     def volleying(self):
-        if self.eliminateNegative:   
-            return not list(self.get_movies().values()).count(False) == 1
+        return not len(self.get_remaining_movies()) == 1
 
     def last_movie(self):
         return list(self.get_remaining_movies())[0]
 
     def last_movie_name(self):
-        return self.movie_titles().get(self.last_movie())
-
+        return self.get_remaining_movies()[0].movie_name
 
     numberVolleys = models.IntegerField(initial=0)
 
     volley = models.LongStringField(initial="")
-                     
+
+class MovieSelection(Model):
+    group = ForeignKey(Group) 
+    movie_key = models.StringField()
+    movie_name = models.StringField()
+    movie_description = models.StringField()
+    movie_isRemaining = models.BooleanField()
+    movie_isChecked = models.BooleanField(initial=False, widget=CheckboxInput)
+
 class Player(BasePlayer):
 
     isSelecting = models.BooleanField()
@@ -154,8 +121,8 @@ class Player(BasePlayer):
     
     satisfied = models.IntegerField(
         label="How satisfied are you with the choice you came to with your partner?",
-        choices=[1, 2, 3, 4, 5],
-        widget=widgets.RadioSelectHorizontal,
+        choices=[[1, "Very Unsatisfied"], [2, "Unsatisfied"], [3, "Neutral"], [4, "Satisfied"], [5, "Very Satisfied"]],
+        widget=widgets.RadioSelect,
         blank=True
     )
 
@@ -178,7 +145,7 @@ class Player(BasePlayer):
         blank=True
     )
 
-        # Demographic questions
+    # Demographic questions
     gender = models.IntegerField(
         label="What is your gender?",
         choices=[
@@ -190,7 +157,7 @@ class Player(BasePlayer):
         blank=True
     )
     age = models.IntegerField(
-        label="how old are you??",
+        label="how old are you?",
         min=18,
         max=130,
         blank=True
@@ -208,6 +175,7 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
         blank=True
     )
+
     education = models.IntegerField(
         label="Please indicate the highest level of education completed.",
         choices=[

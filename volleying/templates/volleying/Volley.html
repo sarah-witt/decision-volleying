@@ -1,13 +1,16 @@
-{% extends "volleying/Page.html" %}
+{% extends "global/Page.html" %}
 {% load otree static %}
 {% load static %}
 
 {% block content %}
 
-<p> Please select the movie trailer(s) you would not like to watch.</p>
+<p> Please select the movie trailer(s) you would <strong> not </strong> like to watch.</p>
 
 <h5> Remaining Movies </h5>
-{% formfields %}
+{% for form in movie_formset %}
+        {{ form }}
+{% endfor %}
+     
 <br>
 <hr>
 <br>
