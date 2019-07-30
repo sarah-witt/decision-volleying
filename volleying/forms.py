@@ -7,10 +7,10 @@ from django.db import models
 class MovieForm(ModelForm):
     class Meta:
         model = MovieSelection
-        fields = ['movie_isChecked']
+        fields = ['isChecked']
         widgets = {
-            'movie_isChecked': CheckboxInput()
+            'isChecked': CheckboxInput()
         }
         
     def setLabel(self, label):
-        self.fields['movie_isChecked'].label = label
+        self.fields['isChecked'].label = label

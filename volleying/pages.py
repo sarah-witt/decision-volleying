@@ -4,7 +4,18 @@ from .forms import MovieForm
 from django.forms import modelformset_factory
 import time
 
-MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('movie_isChecked',), extra=0)
+MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('isChecked',), extra=0)
+
+def vars_for_template_volley(page):
+        remaining_movies = page.player.group.get_remaining_movies()
+
+        question_formset = MovieFormset(queryset=remaining_movies)
+        for (form, model) in zip(question_formset, remaining_movies):
+            form.setLabel(model.description)
+
+        return {
+            'movie_formset': question_formset
+        }
 
 def before_next_page_volley(page):
     page.group.numberVolleys +=1
@@ -13,7 +24,7 @@ def before_next_page_volley(page):
     page.group.volley = page.group.volley + " ".join(page.group.get_remaining_movie_names())
 
     all_movies = MovieSelection.objects.filter(group__exact=page.player.group)
-    remaining_movies = all_movies.filter(movie_isRemaining__exact=True)
+    remaining_movies = all_movies.filter(isRemaining__exact=True)
 
     submitted_data = page.form.data
     movies_by_id = {mov.pk: mov for mov in page.player.group.movieselection_set.all()}
@@ -22,23 +33,23 @@ def before_next_page_volley(page):
     for i in range(len(remaining_movies)):
         input_prefix = 'form-%d-' % i
         mov_id = int(submitted_data[input_prefix + 'id'])
-        isChecked = submitted_data.get(input_prefix + 'movie_isChecked')
+        isChecked = submitted_data.get(input_prefix + 'isChecked')
 
         mov = movies_by_id[mov_id]
 
         if isChecked:
-            mov.movie_isChecked = True
+            mov.isChecked = True
 
         if not page.group.eliminateNegative:
-            if not mov.movie_isChecked:
-                mov.movie_isRemaining = False
+            if not mov.isChecked:
+                mov.isRemaining = False
             else: 
-                mov.movie_isRemaining = True
-                mov.movie_isChecked = False
+                mov.isRemaining = True
+                mov.isChecked = False
         else:
-            if mov.movie_isChecked:
-                mov.movie_isRemaining = False
-                mov.movie_isChecked = True
+            if mov.isChecked:
+                mov.isRemaining = False
+                mov.isChecked = True
 
         mov.save()
 
@@ -86,15 +97,7 @@ class VolleyPlayer1(Page):
     template_name = 'volleying/Volley.html'
 
     def vars_for_template(self):
-        remaining_movies = self.player.group.get_remaining_movies()
-
-        question_formset = MovieFormset(queryset=remaining_movies)
-        for (form, model) in zip(question_formset, remaining_movies):
-            form.setLabel(model.movie_description)
-
-        return {
-            'movie_formset': question_formset
-        }
+        return vars_for_template_volley(self)
     
     def before_next_page(self):
         before_next_page_volley(self)
@@ -110,15 +113,7 @@ class VolleyPlayer2(Page):
     template_name = 'volleying/Volley.html'
 
     def vars_for_template(self):
-        remaining_movies = self.player.group.get_remaining_movies()
-
-        question_formset = MovieFormset(queryset=remaining_movies)
-        for (form, model) in zip(question_formset, remaining_movies):
-            form.setLabel(model.movie_description)
-
-        return {
-            'movie_formset': question_formset
-        }
+        return vars_for_template_volley(self)
     
     def before_next_page(self):
         before_next_page_volley(self)
@@ -180,6 +175,8 @@ page_sequence = [
     VolleyPlayer1,
     WaitForOtherPlayer,
     VolleyPlayer2,
+    WaitForOtherPlayer,
+    VolleyPlayer1,
     WaitForOtherPlayer,
     VolleyPlayer2,
     WaitForOtherPlayer,

@@ -21,7 +21,7 @@ class Group(BaseGroup):
 
     def generate_movie_options(self):
         for name, movie in self.movies().items():
-            movieObj = self.movieselection_set.create(group=self, movie_key=name, movie_name=movie["title"], movie_description=movie["description"], movie_isRemaining=True, movie_isChecked=False)
+            movieObj = self.movieselection_set.create(group=self, key=name, name=movie["title"], description=movie["description"], isRemaining=True, isChecked=False)
             movieObj.save()
 
     def movies(self):
@@ -44,16 +44,16 @@ class Group(BaseGroup):
         return MovieSelection.objects.filter(group__exact=self)
 
     def get_remaining_movies(self):
-        return self.get_movies().filter(movie_isRemaining=True)
+        return self.get_movies().filter(isRemaining=True)
 
     def get_eliminated_movies(self):
-        return self.get_movies().filter(movie_isRemaining=False)
+        return self.get_movies().filter(isRemaining=False)
 
     def get_eliminated_movie_descriptions(self):
-        return map(lambda mov: mov.movie_description, self.get_eliminated_movies())
+        return map(lambda mov: mov.description, self.get_eliminated_movies())
 
     def get_remaining_movie_names(self):
-        return map(lambda mov: mov.movie_name, self.get_remaining_movies())
+        return map(lambda mov: mov.name, self.get_remaining_movies())
 
     def volleying(self):
         return not len(self.get_remaining_movies()) == 1
@@ -62,10 +62,10 @@ class Group(BaseGroup):
         return list(self.get_remaining_movies())[0]
 
     def last_movie_name(self):
-        return self.get_remaining_movies()[0].movie_name
+        return self.get_remaining_movies()[0].name
 
     def last_movie_key(self):
-        return self.get_remaining_movies()[0].movie_key
+        return self.get_remaining_movies()[0].key
 
     numberVolleys = models.IntegerField(initial=0)
 
@@ -73,11 +73,11 @@ class Group(BaseGroup):
 
 class MovieSelection(Model):
     group = ForeignKey(Group) 
-    movie_key = models.StringField()
-    movie_name = models.StringField()
-    movie_description = models.StringField()
-    movie_isRemaining = models.BooleanField()
-    movie_isChecked = models.BooleanField(initial=False, widget=CheckboxInput)
+    key = models.StringField()
+    name = models.StringField()
+    description = models.StringField()
+    isRemaining = models.BooleanField()
+    isChecked = models.BooleanField(initial=False, widget=CheckboxInput)
 
 class Player(BasePlayer):
 
