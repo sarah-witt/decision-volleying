@@ -1,4 +1,4 @@
-{% extends "global/Page.html" %}
+{% extends "volleying/Page.html" %}
 {% load checkboxfilter %}
 {% load otree static %}
 {% load static %}
@@ -11,7 +11,7 @@
 <p> Please select the movie trailer(s) you <strong> would </strong> like to watch.</p>
 {% endif %}
 <h5> Remaining Movies </h5>
-<div> 
+<div class="volley-elimination"> 
 {% for form in movie_formset %}
     {% for field in form %}
         {% if field.field.widget|is_checkbox %}
