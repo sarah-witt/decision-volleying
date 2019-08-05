@@ -15,7 +15,7 @@
 {% for form in movie_formset %}
     {% for field in form %}
         {% if field.field.widget|is_checkbox %}
-            {{ field }} {{ field.label_tag }}
+            {{ field }} {{ field.label }}
         {% else %}
             {{field}}
         {% endif %}
