@@ -21,7 +21,7 @@ def before_next_page_volley(page):
     page.group.numberVolleys +=1
     page.player.isSelecting = False
     page.player.get_others_in_group()[0].isSelecting = True
-    page.group.volley = page.group.volley + " ".join(page.group.get_remaining_movie_names())
+    page.group.volley = page.group.volley + "[" + " ".join(page.group.get_remaining_movie_names()) + "] "
 
     all_movies = MovieSelection.objects.filter(group__exact=page.player.group)
     remaining_movies = all_movies.filter(isRemaining__exact=True)
@@ -125,6 +125,10 @@ class VolleyPlayer2(Page):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
 class Results(Page):
+
+    def is_displayed(self):
+        return not self.player.timed_out
+
     def before_next_page(self):
         self.player.selectedMovie = self.player.group.last_movie_name()
 
