@@ -125,14 +125,8 @@ class VolleyPlayer2(Page):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
 class Results(Page):
-
-    def is_displayed(self):
-        return not self.player.timed_out
-
     def before_next_page(self):
         self.player.selectedMovie = self.player.group.last_movie_name()
-        if self.timeout_happened:
-            self.player.timed_out = True
 
     def get_timeout_seconds(self):
         return 200
