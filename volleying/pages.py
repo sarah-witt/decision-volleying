@@ -6,77 +6,6 @@ import time
 
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('isChecked',), extra=0)
 
-def volley_error_message(page):
-    remaining_movies = page.player.group.get_remaining_movies()
-    submitted_data = page.form.data
-    num_checked = 0
-
-    for i in range(len(remaining_movies)):
-        input_prefix = 'form-%d-' % i
-        isChecked = submitted_data.get(input_prefix + 'isChecked')
-
-        if isChecked:
-            num_checked+=1 
-
-    if (len(remaining_movies) == num_checked):
-        return 'You cannot select every movie trailer'
-    elif (num_checked == 0):
-        return 'You must select at least one movie trailer'
-    else:
-        pass
-
-def vars_for_template_volley(page):
-        remaining_movies = page.player.group.get_remaining_movies()
-
-        question_formset = MovieFormset(queryset=remaining_movies)
-        for (form, model) in zip(question_formset, remaining_movies):
-            form.setLabel(model.description)
-
-        return {
-            'movie_formset': question_formset
-        }
-
-def before_next_page_volley(page):
-    page.group.numberVolleys +=1
-    page.player.isSelecting = False
-    page.player.get_others_in_group()[0].isSelecting = True
-    page.group.volley = page.group.volley + "[" + " ".join(page.group.get_remaining_movie_names()) + "] "
-
-    all_movies = MovieSelection.objects.filter(group__exact=page.player.group)
-    remaining_movies = all_movies.filter(isRemaining__exact=True)
-
-    submitted_data = page.form.data
-    movies_by_id = {mov.pk: mov for mov in page.player.group.movieselection_set.all()}
-
-
-    for i in range(len(remaining_movies)):
-        input_prefix = 'form-%d-' % i
-        mov_id = int(submitted_data[input_prefix + 'id'])
-        isChecked = submitted_data.get(input_prefix + 'isChecked')
-
-        mov = movies_by_id[mov_id]
-
-        if isChecked:
-            mov.isChecked = True
-
-        if not page.group.eliminateNegative:
-            if not mov.isChecked:
-                mov.isRemaining = False
-            else: 
-                mov.isRemaining = True
-                mov.isChecked = False
-        else:
-            if mov.isChecked:
-                mov.isRemaining = False
-                mov.isChecked = True
-
-        mov.save()
-
-    if page.timeout_happened:
-        page.player.get_partner().timed_out = True
-        page.player.timed_out = True
-    
-
 class Introduction(Page):
     def before_next_page(self):
         # user has 60 minutes to complete as many pages as possible
@@ -111,43 +40,90 @@ class Instructions(Page):
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
 
-class VolleyPlayer1(Page):
+class Volley(Page):
     form_model = 'group'
     template_name = 'volleying/Volley.html'
 
     def vars_for_template(self):
-        return vars_for_template_volley(self)
+        remaining_movies = self.player.group.get_remaining_movies()
+
+        question_formset = MovieFormset(queryset=remaining_movies)
+        for (form, model) in zip(question_formset, remaining_movies):
+            form.setLabel(model.description)
+
+        return {
+            'movie_formset': question_formset
+        }
     
     def before_next_page(self):
-        before_next_page_volley(self)
+        self.group.numberVolleys +=1
+        self.player.isSelecting = False
+        self.player.get_others_in_group()[0].isSelecting = True
+        self.group.volley = self.group.volley + "[" + " ".join(self.group.get_remaining_movie_names()) + "] "
+
+        all_movies = MovieSelection.objects.filter(group__exact=self.player.group)
+        remaining_movies = all_movies.filter(isRemaining__exact=True)
+
+        submitted_data = self.form.data
+        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all()}
+
+
+        for i in range(len(remaining_movies)):
+            input_prefix = 'form-%d-' % i
+            mov_id = int(submitted_data[input_prefix + 'id'])
+            isChecked = submitted_data.get(input_prefix + 'isChecked')
+
+            mov = movies_by_id[mov_id]
+
+            if isChecked:
+                mov.isChecked = True
+
+            if not self.group.eliminateNegative:
+                if not mov.isChecked:
+                    mov.isRemaining = False
+                else: 
+                    mov.isRemaining = True
+                    mov.isChecked = False
+            else:
+                if mov.isChecked:
+                    mov.isRemaining = False
+                    mov.isChecked = True
+
+            mov.save()
+
+        if self.timeout_happened:
+            self.player.get_partner().timed_out = True
+            self.player.timed_out = True
 
     def get_timeout_seconds(self):
         return 60
+    
+    def error_message(self, values):
+        remaining_movies = self.player.group.get_remaining_movies()
+        submitted_data = self.form.data
+        num_checked = 0
 
+        for i in range(len(remaining_movies)):
+            input_prefix = 'form-%d-' % i
+            isChecked = submitted_data.get(input_prefix + 'isChecked')
+
+            if isChecked:
+                num_checked+=1 
+
+        if (len(remaining_movies) == num_checked):
+            return 'You cannot select every movie trailer'
+        elif (num_checked == 0):
+            return 'You must select at least one movie trailer'
+        else:
+            pass
+
+class VolleyPlayer1(Volley):
     def is_displayed(self):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 1)
-    
-    def error_message(self, values):
-        return volley_error_message(self)
 
-class VolleyPlayer2(Page):
-    form_model = 'group'
-    template_name = 'volleying/Volley.html'
-
-    def vars_for_template(self):
-        return vars_for_template_volley(self)
-    
-    def before_next_page(self):
-        before_next_page_volley(self)
-            
-    def get_timeout_seconds(self):
-        return 60
-
+class VolleyPlayer2(Volley):
     def is_displayed(self):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
-
-    def error_message(self, values):
-        return volley_error_message(self)
 
 class Results(Page):
 
