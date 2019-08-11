@@ -6,6 +6,25 @@ import time
 
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('isChecked',), extra=0)
 
+def volley_error_message(page):
+    remaining_movies = page.player.group.get_remaining_movies()
+    submitted_data = page.form.data
+    num_checked = 0
+
+    for i in range(len(remaining_movies)):
+        input_prefix = 'form-%d-' % i
+        isChecked = submitted_data.get(input_prefix + 'isChecked')
+
+        if isChecked:
+            num_checked+=1 
+
+    if (len(remaining_movies) == num_checked):
+        return 'You cannot select every movie trailer'
+    elif (num_checked == 0):
+        return 'You must select at least one movie trailer'
+    else:
+        pass
+
 def vars_for_template_volley(page):
         remaining_movies = page.player.group.get_remaining_movies()
 
@@ -107,6 +126,9 @@ class VolleyPlayer1(Page):
 
     def is_displayed(self):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 1)
+    
+    def error_message(self, values):
+        return volley_error_message(self)
 
 class VolleyPlayer2(Page):
     form_model = 'group'
@@ -123,6 +145,9 @@ class VolleyPlayer2(Page):
 
     def is_displayed(self):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
+
+    def error_message(self, values):
+        return volley_error_message(self)
 
 class Results(Page):
 

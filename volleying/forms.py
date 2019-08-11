@@ -11,8 +11,6 @@ class MovieForm(ModelForm):
         widgets = {
             'isChecked': CheckboxInput()
         }
-
-
         
     def setLabel(self, label):
         self.fields['isChecked'].label = label
