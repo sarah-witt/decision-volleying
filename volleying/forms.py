@@ -1,6 +1,7 @@
 from .models import MovieSelection, Group, Player, Constants
 from django.forms import inlineformset_factory, BaseFormSet, BaseInlineFormSet, CheckboxInput, ModelForm
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 
@@ -13,5 +14,5 @@ class MovieForm(ModelForm):
         }
         
     def setLabel(self, label):
-        self.fields['isChecked'].label = label
+        self.fields['isChecked'].label = mark_safe(label)
         self.fields['isChecked'].label_suffix = ''

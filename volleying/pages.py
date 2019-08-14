@@ -22,13 +22,22 @@ class ParticipantInfo(Page):
     form_fields = ['first_name', 'mturkId']
 
     def error_message(self, values):
-        if values["first_name"] == '':
+        if len(values["first_name"]) == 0:
             return 'Please enter your name'
-        if values["mturkId"] == '':
+        if len(values["mturkId"]) == 0:
             return 'Please enter a valid mturkId'
 
 class WelcomeInstructions(Page):
     pass
+
+class ChatWaitPage(WaitPage):
+    template_name = 'volleying/WaitForChat.html'
+    def after_all_players_arrive(self):
+        self.is_displayed = False
+    
+    def get_timeout_seconds(self):
+        return 90
+
 
 class Chat(Page):
     def get_timeout_seconds(self):
@@ -39,6 +48,9 @@ class Instructions(Page):
     
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
+
+def sort_movies(movie):
+    return movie.key
 
 class Volley(Page):
     form_model = 'group'
@@ -65,13 +77,14 @@ class Volley(Page):
         remaining_movies = all_movies.filter(isRemaining__exact=True)
 
         submitted_data = self.form.data
-        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all()}
-
-
+    
+        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all().order_by('-key')}
+    
         for i in range(len(remaining_movies)):
             input_prefix = 'form-%d-' % i
             mov_id = int(submitted_data[input_prefix + 'id'])
             isChecked = submitted_data.get(input_prefix + 'isChecked')
+
 
             mov = movies_by_id[mov_id]
 
@@ -155,6 +168,7 @@ page_sequence = [
     Introduction,
     ParticipantInfo,
     WelcomeInstructions,
+    ChatWaitPage,
     Chat,
     Instructions,
     VolleyPlayer1,
