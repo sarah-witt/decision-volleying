@@ -55,7 +55,7 @@ class Volley(Page):
     def vars_for_template(self):
         remaining_movies = self.player.group.get_remaining_movies()
 
-        question_formset = MovieFormset(queryset=remaining_movies)
+        question_formset = MovieFormset(queryset=MovieSelection.objects.filter(group__exact=self.player.group).filter(isRemaining__exact=True))
         for (form, model) in zip(question_formset, remaining_movies):
             form.setLabel(model.description)
 
@@ -74,15 +74,15 @@ class Volley(Page):
 
         submitted_data = self.form.data
     
-        movies_by_id = {mov.pk: mov for mov in self.player.group.movieselection_set.all().order_by('-key')}
+        movies_by_id = {mov.pk: mov for mov in remaining_movies}
     
         for i in range(len(remaining_movies)):
-            input_prefix = 'form-%d-' % i
-            mov_id = int(submitted_data[input_prefix + 'id'])
+            input_prefix = 'form-%d-' % (len(remaining_movies) - i - 1)
+            input_prefix1 = 'form-%d-' % i
+            mov_id1 = int(submitted_data[input_prefix1 + 'id'])
             isChecked = submitted_data.get(input_prefix + 'isChecked')
 
-
-            mov = movies_by_id[mov_id]
+            mov = movies_by_id[mov_id1]
 
             if isChecked:
                 mov.isChecked = True
