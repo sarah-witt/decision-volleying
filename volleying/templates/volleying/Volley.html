@@ -29,7 +29,7 @@
 <h5> Eliminated Movies</h5>
 <ul>
 {% for item in group.get_eliminated_movie_descriptions %}
-    <li> <strike> {{ item }} </strike></li>
+    <li> <strike> {{ item | safe }} </strike></li>
 {% endfor %}
 </ul>
 

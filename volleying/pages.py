@@ -34,10 +34,6 @@ class ChatWaitPage(WaitPage):
     template_name = 'volleying/WaitForChat.html'
     def after_all_players_arrive(self):
         self.is_displayed = False
-    
-    def get_timeout_seconds(self):
-        return 90
-
 
 class Chat(Page):
     def get_timeout_seconds(self):
@@ -109,7 +105,7 @@ class Volley(Page):
             self.player.timed_out = True
 
     def get_timeout_seconds(self):
-        return 60
+        return 120
     
     def error_message(self, values):
         remaining_movies = self.player.group.get_remaining_movies()
@@ -138,7 +134,8 @@ class VolleyPlayer2(Volley):
     def is_displayed(self):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
-class Results(Page):
+class TrailerIntro(Page):
+    timeout_seconds = 30
 
     def is_displayed(self):
         return not self.player.timed_out
@@ -146,6 +143,8 @@ class Results(Page):
     def before_next_page(self):
         self.player.selectedMovie = self.player.group.last_movie_name()
 
+
+class Results(Page):
     def get_timeout_seconds(self):
         return 200
 

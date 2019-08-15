@@ -3,8 +3,6 @@ from django.forms import inlineformset_factory, BaseFormSet, BaseInlineFormSet, 
 from django.db import models
 from django.utils.safestring import mark_safe
 
-
-
 class MovieForm(ModelForm):
     class Meta:
         model = MovieSelection
