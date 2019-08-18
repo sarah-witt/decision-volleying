@@ -13,8 +13,6 @@ class Introduction(Page):
             self.player.isSelecting = True
         else:
             self.player.isSelecting = False
-        
-        self.participant.vars['expiry'] = time.time() + 3600
 
 class ParticipantInfo(Page):
     template_name = 'volleying/ParticipantInfo.html'
@@ -28,19 +26,24 @@ class ParticipantInfo(Page):
             return 'Please enter a valid mturkId'
 
 class WelcomeInstructions(Page):
-    pass
+    def before_next_page(self):
+        self.player.participant.vars['expiry'] = time.time() + 120
 
 class ChatWaitPage(WaitPage):
     template_name = 'volleying/WaitForChat.html'
+    
     def after_all_players_arrive(self):
-        self.is_displayed = False
+        self.is_displayed = True
 
 class Chat(Page):
     def get_timeout_seconds(self):
-        return 60
+        return 120
 
 class Instructions(Page):
     pass
+
+    def get_timeout_seconds(self):
+        return 60
     
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
@@ -147,10 +150,13 @@ class TrailerIntro(Page):
 class Results(Page):
     def get_timeout_seconds(self):
         return 200
+        
+    def is_displayed(self):
+        return not self.player.timed_out
 
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['satisfied', 'partner_experience', 'age', 'race', 'gender', 'comment']
+    form_fields = ['satisfied', 'partner_experience', 'strategy', 'age', 'race', 'gender', 'comment']
     
     def is_displayed(self):
         return not self.player.timed_out

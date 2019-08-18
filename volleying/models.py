@@ -134,6 +134,11 @@ class Player(BasePlayer):
         blank=True,
     )
 
+    strategy = models.LongStringField(
+        label="Explain what your strategy was in selecting a movie trailer:",
+        blank=True,
+    )
+
     rate_trailer = models.IntegerField(
         label="Please rate how much you liked the trailer",
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
