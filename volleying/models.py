@@ -21,22 +21,22 @@ class Group(BaseGroup):
 
     def generate_movie_options(self):
         for name, movie in self.movies().items():
-            movieObj = self.movieselection_set.create(group=self, key=name, name=movie["title"], description=movie["description"], isRemaining=True, isChecked=False)
+            movieObj = self.movieselection_set.create(group=self, key=name, name=movie["title"], description=movie["description"], embeddedVideo=movie["videoId"], isRemaining=True, isChecked=False)
             movieObj.save()
 
     def movies(self):
-        return {'intouchables': {"description": "<strong> The Intouchables </strong>(Foreign) – two very different men bond and develop a very close relationship", "title":  "The Intouchables"},
-                'starfish': {"description": "<strong> Starfish </strong>(Science Fiction) – a young woman struggles with the death of her best friend", "title": "Starfish"}, 
-                'versailles': {"description": "<strong>The Queen of Versailles </strong>(Documentary) – the economic crisis threatens the fortune of a billionaire family", "title": "The Queen of Versailles"},
-                'hush': {"description": "<strong>Hush </strong>(Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window", "title": "Hush"},
-                'father': {"description": "<strong> Like Father </strong> (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon", "title": "Like Father"},
-                'tomboy': {"description": "<strong> Tomboy </strong> (Drama) - a 10-year old girl experiments with with her gender identity over the summer", "title": "Tomboy"},
-                'phoenix': {"description": "<strong>Dark Phoenix </strong>(Science Fiction/Action) – the X-Men embark on a risky mission in space", "title": "Dark Phoenix"},
-                'shazam': {"description": "<strong>Shazam! </strong>(Superhero) - a 14-year-old transforms into an adult superhero with one magic word", "title": "Shazam!"},
-                'dumbo': {"description": "<strong>Dumbo </strong>(Fantasy) - a man and his two children take care of a newborn elephant that can fly", "title": "Dumbo"},
-                'survivalist': {"description": "<strong>The Survivalist </strong>(Thriller) - a survivalist hides in the forest protecting his crop from intruders", "title": "The Survivalist"},
-                'carol': {"description": "<strong>Carol </strong>(Romance) - two women develop a fast bond that becomes a love with complicated consequences", "title": "Carol"},
-                'wild': {"description": "<strong> Wild </strong>(Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy", "title": "Wild"}}
+        return {'intouchables': {"videoId": "34WIbmXkewU", "description": "<strong> The Intouchables </strong>(Foreign) – two very different men bond and develop a very close relationship", "title":  "The Intouchables"},
+                'starfish': {"videoId": "U5XnW3c8P-Y", "description": "<strong> Starfish </strong>(Science Fiction) – a young woman struggles with the death of her best friend", "title": "Starfish"}, 
+                'versailles': {"videoId": "LQW9Ks0GZUQ", "description": "<strong>The Queen of Versailles </strong>(Documentary) – the economic crisis threatens the fortune of a billionaire family", "title": "The Queen of Versailles"},
+                'hush': {"videoId": "Q_P8WCbhC6s", "description": "<strong>Hush </strong>(Horror) – a deaf writer living in the woods fights for her life when a killer appears in her window", "title": "Hush"},
+                'father': {"videoId": "_bfqsNh6U7c", "description": "<strong> Like Father </strong> (Rom-com) – a woman left at the altar takes her estranged father on her honeymoon", "title": "Like Father"},
+                'tomboy': {"videoId": "Jb-Oys-IcWE", "description": "<strong> Tomboy </strong> (Drama) - a 10-year old girl experiments with with her gender identity over the summer", "title": "Tomboy"},
+                'phoenix': {"videoId": "1-q8C_c-nlM", "description": "<strong>Dark Phoenix </strong>(Science Fiction/Action) – the X-Men embark on a risky mission in space", "title": "Dark Phoenix"},
+                'shazam': {"videoId": "Y5I4TA0yhr4", "description": "<strong>Shazam! </strong>(Superhero) - a 14-year-old transforms into an adult superhero with one magic word", "title": "Shazam!"},
+                'dumbo': {"videoId": "7NiYVoqBt-8", "description": "<strong>Dumbo </strong>(Fantasy) - a man and his two children take care of a newborn elephant that can fly", "title": "Dumbo"},
+                'survivalist': {"videoId": "KNADbtHsIU8", "description": "<strong>The Survivalist </strong>(Thriller) - a survivalist hides in the forest protecting his crop from intruders", "title": "The Survivalist"},
+                'carol': {"videoId": "679wr31SXWk", "description": "<strong>Carol </strong>(Romance) - two women develop a fast bond that becomes a love with complicated consequences", "title": "Carol"},
+                'wild': {"videoId": "tn2-GSqPyl0", "description": "<strong> Wild </strong>(Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy", "title": "Wild"}}
     
     eliminateNegative = models.BooleanField(initial=True) 
 
@@ -78,6 +78,7 @@ class MovieSelection(Model):
     description = models.StringField()
     isRemaining = models.BooleanField()
     isChecked = models.BooleanField(initial=False, widget=CheckboxInput)
+    embeddedVideo = models.StringField()
 
 class Player(BasePlayer):
 

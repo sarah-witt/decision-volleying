@@ -1,10 +1,11 @@
 from ._builtin import Page, WaitPage
 from .models import Constants, MovieSelection
-from .forms import MovieForm
+from .forms import MovieForm, MovieResultForm
 from django.forms import modelformset_factory
 import time
 
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('isChecked',), extra=0)
+RemainingMovie = modelformset_factory(MovieSelection, form=MovieResultForm, fields=('embeddedVideo',), extra=0)
 
 class Introduction(Page):
     def before_next_page(self):
@@ -43,7 +44,7 @@ class Instructions(Page):
     pass
 
     def get_timeout_seconds(self):
-        return 60
+        return 45
     
 class WaitForOtherPlayer(WaitPage):
     template_name = 'volleying/WaitPage.html'
@@ -153,6 +154,17 @@ class Results(Page):
         
     def is_displayed(self):
         return not self.player.timed_out
+
+    def vars_for_template(self):
+        remaining_movies = self.player.group.get_remaining_movies()
+        question_formset = RemainingMovie(queryset=MovieSelection.objects.filter(group__exact=self.player.group).filter(isRemaining__exact=True))
+
+        for (form, model) in zip(question_formset, remaining_movies):
+            form.generateVideoHtml(model.embeddedVideo)
+
+        return {
+            'movie_formset': question_formset
+        }
 
 class Demographics(Page):
     form_model = 'player'
