@@ -103,6 +103,7 @@ class Player(BasePlayer):
         self.mturkCompletitionCode = code
         return code
 
+
     selectedMovie = models.StringField(initial="")
 
     isSelecting = models.BooleanField()
@@ -122,6 +123,8 @@ class Player(BasePlayer):
     mturkCompletitionCode = models.StringField(initial="")
 
     timed_out = models.BooleanField(initial=False)
+
+    madeFinalDecision = models.BooleanField()
 
     satisfied = models.IntegerField(
         label="How satisfied are you with the choice you came to with your partner?",

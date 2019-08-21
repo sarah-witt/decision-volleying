@@ -141,6 +141,14 @@ class VolleyPlayer2(Volley):
 class TrailerIntro(Page):
     timeout_seconds = 30
 
+    def vars_for_template(self):
+        self.player.madeFinalDecision = not self.player.isSelecting
+        self.player.selectedMovie = self.player.group.last_movie_name()
+
+        return {
+            "finalMovie": self.player.selectedMovie
+        }
+
     def is_displayed(self):
         return not self.player.timed_out
 
@@ -165,6 +173,7 @@ class Results(Page):
         return {
             'movie_formset': question_formset
         }
+    
 
 class Demographics(Page):
     form_model = 'player'
@@ -216,6 +225,7 @@ page_sequence = [
     WaitForOtherPlayer,
     VolleyPlayer2,
     WaitForOtherPlayer,
+    TrailerIntro,
     Results,
     Demographics,
     Conclusion
