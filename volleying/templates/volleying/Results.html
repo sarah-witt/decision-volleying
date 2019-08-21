@@ -8,7 +8,7 @@ Trailer for {{player.group.last_movie_name}}
 
 {% block content %}
 
-<p> You and your partner chose to watch the trailer for {{player.group.last_movie_name}} together. Now, take time to watch the trailer and share your reactions with your partner while discussing what you think of the trailer using the chatbox below </p>
+<p> You and your partner chose to watch the trailer for {{player.group.last_movie_name}} together. Now, take time to watch the trailer and share your reactions with your partner and discuss what you think of the trailer using the chatbox below. </p>
 
 
 <div class="trailers"> 
@@ -25,7 +25,7 @@ Trailer for {{player.group.last_movie_name}}
 </div>
 <div class="trailerColumn">
     <p> <strong> Chat with your partner here</strong></p>
-    {% chat nickname=player.first_name %}
+    {% chat nickname=player.first_name channel="2" %}
 </div>
 <br>
 <br>

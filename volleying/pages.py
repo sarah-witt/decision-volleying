@@ -139,7 +139,7 @@ class VolleyPlayer2(Volley):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
 class TrailerIntro(Page):
-    timeout_seconds = 30
+    timeout_seconds = 20
 
     def vars_for_template(self):
         self.player.madeFinalDecision = not self.player.isSelecting
@@ -174,10 +174,20 @@ class Results(Page):
             'movie_formset': question_formset
         }
     
+class FollowUpQuestions(Page):
+    form_model = 'player'
+    form_fields = ['satisfied', 'partner_experience', 'strategy', 'comment']
+    
+    def is_displayed(self):
+        return not self.player.timed_out
+
+    def before_next_page(self):
+        if self.timeout_happened:
+            self.player.timed_out = True
 
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['satisfied', 'partner_experience', 'strategy', 'age', 'race', 'gender', 'comment']
+    form_fields = ['age', 'race', 'gender']
     
     def is_displayed(self):
         return not self.player.timed_out
@@ -227,6 +237,7 @@ page_sequence = [
     WaitForOtherPlayer,
     TrailerIntro,
     Results,
+    FollowUpQuestions,
     Demographics,
     Conclusion
 ]

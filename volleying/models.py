@@ -130,31 +130,26 @@ class Player(BasePlayer):
         label="How satisfied are you with the choice you came to with your partner?",
         choices=[[1, "Very Unsatisfied"], [2, "Unsatisfied"], [3, "Neutral"], [4, "Satisfied"], [5, "Very Satisfied"]],
         widget=widgets.RadioSelect,
-        blank=True
     )
 
     partner_experience = models.LongStringField(
         label="Explain how your experience with your partner was:",
-        blank=True,
     )
 
     strategy = models.LongStringField(
         label="Explain what your strategy was in selecting a movie trailer:",
-        blank=True,
     )
 
     rate_trailer = models.IntegerField(
         label="Please rate how much you liked the trailer",
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         widget=widgets.RadioSelectHorizontal,
-        blank=True
     )
 
     likely_watch = models.IntegerField(
         label="how likely are you to watch the movie?",
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         widget=widgets.RadioSelectHorizontal,
-        blank=True
     )
 
     # Demographic questions
