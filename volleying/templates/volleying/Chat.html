@@ -10,7 +10,7 @@ Chat
 
 <p> Take a few minutes to introduce yourselves and talk about your movie preferences:</p>
 
-{% chat nickname=player.first_name channel="1" %}
+{% chat nickname=player.first_name channel=player.group.chat %}
 
 <hr />
 

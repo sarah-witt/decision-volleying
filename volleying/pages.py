@@ -18,13 +18,11 @@ class Introduction(Page):
 class ParticipantInfo(Page):
     template_name = 'volleying/ParticipantInfo.html'
     form_model = 'player'
-    form_fields = ['first_name', 'mturkId']
+    form_fields = ['first_name']
 
     def error_message(self, values):
         if len(values["first_name"]) == 0:
             return 'Please enter your name'
-        if len(values["mturkId"]) == 0:
-            return 'Please enter a valid mturkId'
 
 class WelcomeInstructions(Page):
     def before_next_page(self):
@@ -38,10 +36,9 @@ class ChatWaitPage(WaitPage):
 
 class Chat(Page):
     def get_timeout_seconds(self):
-        return 120
+        return 90
 
 class Instructions(Page):
-    pass
 
     def get_timeout_seconds(self):
         return 45

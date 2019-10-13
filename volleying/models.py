@@ -15,6 +15,11 @@ class Subsession(BaseSubsession):
     def creating_session(self):
         for group_id, group in enumerate(self.get_groups()):
             group.eliminateNegative = group_id % 2 == 0
+            group.goal = group_id % 8 < 4
+            print(group.goal)
+            group.chat = str(group_id) + 'chat1'
+            group.chat2 = str(group_id) + 'chat2'
+
             group.generate_movie_options()
 
 class Group(BaseGroup):
@@ -39,6 +44,10 @@ class Group(BaseGroup):
                 'wild': {"videoId": "tn2-GSqPyl0", "description": "<strong> Wild </strong>(Adventure) - a woman's solo undertakes a hike as a way to recover from a recent personal tragedy", "title": "Wild"}}
     
     eliminateNegative = models.BooleanField(initial=True) 
+
+    goal = models.BooleanField()
+    chat = models.StringField()
+    chat2 = models.StringField()
 
     def get_movies(self):
         return MovieSelection.objects.filter(group__exact=self)
