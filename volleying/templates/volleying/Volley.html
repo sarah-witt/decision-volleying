@@ -6,9 +6,9 @@
 {% block content %}
 
 {% if player.group.eliminateNegative %}
-<p> Please select the movie trailer(s) you would <strong> not </strong> like to watch.</p>
+<p> Please select the movie trailer(s) <strong> {% if player.group.goal %} that you personally would NOT want to watch{% else %} that your partner would NOT want to watch{% endif %}</strong>, and click NEXT. </p>
 {% else %}
-<p> Please select the movie trailer(s) you <strong> would </strong> like to watch.</p>
+<p> Please select the movie trailer(s) <strong> {% if player.group.goal %} that you would want to watch{% else %} that your partner would want to watch{% endif %}</strong>, and click NEXT.</p>
 {% endif %}
 <h5> Remaining Movies </h5>
 <div class="volley-elimination"> 

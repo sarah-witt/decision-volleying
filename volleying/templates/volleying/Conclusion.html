@@ -7,9 +7,10 @@
 {% if player.timed_out %}
   <p> Either you or your partner took too long completing the survey, so you could not finish. You will still get compensated for your participation</p>
 {% else %}
-<p> Thank you for participating in this study! We hope you have enjoyed the trailer.</p>
+<p> Thank you for participating in this study! </p>
 {% endif %}
 <br>
+{% comment %}
 <p>
   Please enter this secret code into mTurk to receive payment for this HIT:
   <h3>
@@ -17,4 +18,5 @@
   </h3>
 
 </p>
+{% endcomment %}
 {% endblock %}

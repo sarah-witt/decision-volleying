@@ -135,11 +135,30 @@ class Player(BasePlayer):
 
     madeFinalDecision = models.BooleanField()
 
-    satisfied = models.IntegerField(
+    satisfied_trailer = models.IntegerField(
         label="How satisfied are you with the choice you came to with your partner?",
-        choices=[[1, "Very Unsatisfied"], [2, "Unsatisfied"], [3, "Neutral"], [4, "Satisfied"], [5, "Very Satisfied"]],
-        widget=widgets.RadioSelect,
+        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
+        widget=widgets.RadioSelectHorizontal,
     )
+
+    satisfied_process = models.IntegerField(
+        label="How satisfied are you with the process by which you and your partner chose the movie trailer?",
+        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
+        widget=widgets.RadioSelectHorizontal,
+    )
+
+    satisfied_treated = models.IntegerField(
+        label="How satisfied are you with how you were treated by your partner?",
+        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
+        widget=widgets.RadioSelectHorizontal,
+    )
+
+    willing_to = models.IntegerField(
+        label="How willing would you be to make a decision with this partner again in the future?",
+        choices=[[1, "Not Willing"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Willing"]],
+        widget=widgets.RadioSelectHorizontal,
+    )
+
 
     partner_experience = models.LongStringField(
         label="Explain how your experience with your partner was:",

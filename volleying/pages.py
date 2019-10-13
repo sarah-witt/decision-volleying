@@ -136,7 +136,7 @@ class VolleyPlayer2(Volley):
         return (not self.player.timed_out) and self.group.volleying() and (self.player.id_in_group == 2)
 
 class TrailerIntro(Page):
-    timeout_seconds = 20
+    timeout_seconds = 15
 
     def vars_for_template(self):
         self.player.madeFinalDecision = not self.player.isSelecting
@@ -173,7 +173,7 @@ class Results(Page):
     
 class FollowUpQuestions(Page):
     form_model = 'player'
-    form_fields = ['satisfied', 'partner_experience', 'strategy', 'comment']
+    form_fields = ['satisfied_trailer', 'satisfied_process', 'satisfied_treated', 'willing_to', 'comment']
     
     def is_displayed(self):
         return not self.player.timed_out
