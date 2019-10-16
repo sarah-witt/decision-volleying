@@ -135,27 +135,33 @@ class Player(BasePlayer):
 
     madeFinalDecision = models.BooleanField()
 
+    manip_question = models.StringField(
+        label="In this study, what were you instructed to do?",
+        widget=widgets.RadioSelect,
+        choices=["Choose the movie that I personally would enjoy the most", "Choose the movie that I think my partner would enjoy the most"]
+    )
+
     satisfied_trailer = models.IntegerField(
         label="How satisfied are you with the choice you came to with your partner?",
-        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
-        widget=widgets.RadioSelectHorizontal,
+        choices=[[1, "1 (Very Unsatisfied)"], [2, "2"], [3, "3"], [4, "4"], [5, "5"], [6, "6"], [7, "7 (Very Satisfied)"]],
+        widget=widgets.RadioSelect,
     )
 
     satisfied_process = models.IntegerField(
         label="How satisfied are you with the process by which you and your partner chose the movie trailer?",
-        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
+        choices=[[1, "1 (Very Unsatisfied)"], [2, "2"], [3, "3"], [4, "4"], [5, "5"], [6, "6"], [7, "7 (Very Satisfied)"]],
         widget=widgets.RadioSelect,
     )
 
     satisfied_treated = models.IntegerField(
         label="How satisfied are you with how you were treated by your partner?",
-        choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
+        choices=[[1, "1 (Very Unsatisfied)"], [2, "2"], [3, "3"], [4, "4"], [5, "5"], [6, "6"], [7, "7 (Very Satisfied)"]],
         widget=widgets.RadioSelect,
     )
 
     willing_to = models.IntegerField(
         label="How willing would you be to make a decision with this partner again in the future?",
-        choices=[[1, "Not Willing"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Willing"]],
+        choices=[[1, "1 (Very Unsatisfied)"], [2, "2"], [3, "3"], [4, "4"], [5, "5"], [6, "6"], [7, "7 (Very Satisfied)"]],
         widget=widgets.RadioSelect,
     )
 
