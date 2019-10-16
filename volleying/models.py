@@ -15,7 +15,7 @@ class Subsession(BaseSubsession):
     def creating_session(self):
         for group_id, group in enumerate(self.get_groups()):
             group.eliminateNegative = group_id % 2 == 0
-            group.goal = group_id % 8 < 4
+            group.goal = group_id % 4 < 2
             print(group.goal)
             group.chat = str(group_id) + 'chat1'
             group.chat2 = str(group_id) + 'chat2'
@@ -144,19 +144,19 @@ class Player(BasePlayer):
     satisfied_process = models.IntegerField(
         label="How satisfied are you with the process by which you and your partner chose the movie trailer?",
         choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
-        widget=widgets.RadioSelectHorizontal,
+        widget=widgets.RadioSelect,
     )
 
     satisfied_treated = models.IntegerField(
         label="How satisfied are you with how you were treated by your partner?",
         choices=[[1, "Very Unsatisfied"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Satisfied"]],
-        widget=widgets.RadioSelectHorizontal,
+        widget=widgets.RadioSelect,
     )
 
     willing_to = models.IntegerField(
         label="How willing would you be to make a decision with this partner again in the future?",
         choices=[[1, "Not Willing"], [2, ""], [3, ""], [4, ""], [5, ""], [6, ""], [7, "Very Willing"]],
-        widget=widgets.RadioSelectHorizontal,
+        widget=widgets.RadioSelect,
     )
 
 
@@ -171,13 +171,13 @@ class Player(BasePlayer):
     rate_trailer = models.IntegerField(
         label="Please rate how much you liked the trailer",
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        widget=widgets.RadioSelectHorizontal,
+        widget=widgets.RadioSelect,
     )
 
     likely_watch = models.IntegerField(
         label="how likely are you to watch the movie?",
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        widget=widgets.RadioSelectHorizontal,
+        widget=widgets.RadioSelect,
     )
 
     # Demographic questions

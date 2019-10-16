@@ -7,6 +7,9 @@ import time
 MovieFormset = modelformset_factory(MovieSelection, form=MovieForm, fields=('isChecked',), extra=0)
 RemainingMovie = modelformset_factory(MovieSelection, form=MovieResultForm, fields=('embeddedVideo',), extra=0)
 
+class Consent(Page):
+    pass
+
 class Introduction(Page):
     def before_next_page(self):
         # user has 60 minutes to complete as many pages as possible
@@ -182,6 +185,9 @@ class FollowUpQuestions(Page):
         if self.timeout_happened:
             self.player.timed_out = True
 
+class ManipulationChecks(Page):
+    form_fields = ['manip_question']
+
 class Demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'race', 'gender']
@@ -198,6 +204,7 @@ class Conclusion(Page):
 
 
 page_sequence = [
+    Consent,
     Introduction,
     ParticipantInfo,
     WelcomeInstructions,
