@@ -187,6 +187,11 @@ class Player(BasePlayer):
     )
 
     # Demographic questions
+
+    sonaID = models.StringField(
+        label="What is your SONA ID?",
+    )
+
     gender = models.IntegerField(
         label="What is your gender?",
         choices=[

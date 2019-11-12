@@ -81,9 +81,8 @@ class Volley(Page):
         movies_by_id = {mov.pk: mov for mov in remaining_movies}
     
         for i in range(len(remaining_movies)):
-            input_prefix = 'form-%d-' % (len(remaining_movies) - i - 1)
-            input_prefix1 = 'form-%d-' % i
-            mov_id1 = int(submitted_data[input_prefix1 + 'id'])
+            input_prefix = 'form-%d-' % i
+            mov_id1 = int(submitted_data[input_prefix + 'id'])
             isChecked = submitted_data.get(input_prefix + 'isChecked')
 
             mov = movies_by_id[mov_id1]
@@ -190,7 +189,7 @@ class ManipulationChecks(Page):
 
 class Demographics(Page):
     form_model = 'player'
-    form_fields = ['age', 'race', 'gender']
+    form_fields = ['sonaID', 'age', 'race', 'gender']
     
     def is_displayed(self):
         return not self.player.timed_out
