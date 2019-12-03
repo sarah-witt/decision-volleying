@@ -14,9 +14,12 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     def creating_session(self):
         for group_id, group in enumerate(self.get_groups()):
+            # elimination or selection goal
             group.eliminateNegative = group_id % 2 == 0
+            # choosing the trailer you will like or your partner will like
             group.goal = group_id % 4 < 2
             print(group.goal)
+            # names of the two chats
             group.chat = str(group_id) + 'chat1'
             group.chat2 = str(group_id) + 'chat2'
 
@@ -81,7 +84,7 @@ class Group(BaseGroup):
     volley = models.LongStringField(initial="")
 
 class MovieSelection(Model):
-    group = ForeignKey(Group) 
+    group = ForeignKey(Group, on_delete=models.CASCADE) 
     key = models.StringField()
     name = models.StringField()
     description = models.StringField()
